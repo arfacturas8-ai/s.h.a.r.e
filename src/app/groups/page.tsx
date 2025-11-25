@@ -15,81 +15,6 @@ interface Group {
   postCount?: number;
 }
 
-// Mock data
-const mockGroups: Group[] = [
-  {
-    _id: '1',
-    name: 'Life Stories',
-    slug: 'life-stories',
-    description: 'Share your personal experiences, lessons learned, and moments that shaped who you are today.',
-    coverImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop',
-    memberCount: 234,
-    postCount: 156,
-  },
-  {
-    _id: '2',
-    name: 'Tech Tales',
-    slug: 'tech-tales',
-    description: 'Stories from the world of technology, startups, coding adventures, and digital innovation.',
-    coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop',
-    memberCount: 189,
-    postCount: 98,
-  },
-  {
-    _id: '3',
-    name: 'Travel Adventures',
-    slug: 'travel-adventures',
-    description: 'Explore the world through stories of adventure, discovery, and cultural experiences.',
-    coverImage: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=400&fit=crop',
-    memberCount: 312,
-    postCount: 234,
-  },
-  {
-    _id: '4',
-    name: 'Creative Arts',
-    slug: 'creative-arts',
-    description: 'A space for artists, designers, and creators to share their creative journeys.',
-    coverImage: 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800&h=400&fit=crop',
-    memberCount: 156,
-    postCount: 87,
-  },
-  {
-    _id: '5',
-    name: 'Music & Sound',
-    slug: 'music-sound',
-    description: 'From musicians to music lovers, share your sonic experiences and discoveries.',
-    coverImage: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&h=400&fit=crop',
-    memberCount: 98,
-    postCount: 45,
-  },
-  {
-    _id: '6',
-    name: 'Food & Cooking',
-    slug: 'food-cooking',
-    description: 'Culinary adventures, recipes, restaurant discoveries, and food culture stories.',
-    coverImage: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=400&fit=crop',
-    memberCount: 276,
-    postCount: 189,
-  },
-  {
-    _id: '7',
-    name: 'Books & Writing',
-    slug: 'books-writing',
-    description: 'For readers, writers, and literary enthusiasts to share their bookish journeys.',
-    coverImage: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&h=400&fit=crop',
-    memberCount: 143,
-    postCount: 112,
-  },
-  {
-    _id: '8',
-    name: 'Sports & Fitness',
-    slug: 'sports-fitness',
-    description: 'Athletic achievements, fitness journeys, and sports stories that inspire.',
-    coverImage: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=400&fit=crop',
-    memberCount: 201,
-    postCount: 134,
-  },
-];
 
 function GroupCard({ group }: { group: Group }) {
   return (
@@ -140,8 +65,8 @@ function GroupCard({ group }: { group: Group }) {
 
 export default function GroupsPage() {
   const { client, isLoading: isClientLoading } = useWix();
-  const [groups, setGroups] = useState<Group[]>(mockGroups);
-  const [isLoading, setIsLoading] = useState(false);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {

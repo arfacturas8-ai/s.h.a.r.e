@@ -10,51 +10,35 @@ interface GroupDetailPageProps {
   params: { slug: string };
 }
 
-// Mock data
-const mockGroup = {
-  _id: '1',
-  name: 'Life Stories',
-  slug: 'life-stories',
-  description: 'Share your personal experiences, lessons learned, and moments that shaped who you are today. This is a safe space for authentic storytelling.',
-  coverImage: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=400&fit=crop',
-  memberCount: 234,
-  postCount: 156,
-};
+interface Group {
+  _id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  coverImage?: string;
+  memberCount: number;
+  postCount: number;
+}
 
-const mockStories = [
-  {
-    _id: '1',
-    title: 'Overcoming My Fear of Public Speaking',
-    excerpt: 'Public speaking used to terrify me. Now I speak at conferences. This is the story of how I transformed my greatest weakness.',
-    coverImage: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&h=600&fit=crop',
-    author: { _id: 'a4', nickname: 'James Thompson', photo: '' },
-    groupName: 'Life Stories',
-    groupSlug: 'life-stories',
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    likesCount: 234,
-    commentsCount: 67,
-    readTime: 6,
-  },
-  {
-    _id: '2',
-    title: 'The Day I Decided to Change My Life',
-    excerpt: 'Sometimes it takes hitting rock bottom to realize you need to make a change. This is my story of transformation.',
-    coverImage: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=600&fit=crop',
-    author: { _id: 'a5', nickname: 'Michelle Davis', photo: '' },
-    groupName: 'Life Stories',
-    groupSlug: 'life-stories',
-    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    likesCount: 312,
-    commentsCount: 89,
-    readTime: 8,
-  },
-];
+interface Story {
+  _id: string;
+  title: string;
+  excerpt?: string;
+  coverImage?: string;
+  author?: { _id: string; nickname?: string; photo?: string };
+  groupName?: string;
+  groupSlug?: string;
+  createdAt: string;
+  likesCount?: number;
+  commentsCount?: number;
+  readTime?: number;
+}
 
 export default function GroupDetailPage({ params }: GroupDetailPageProps) {
   const { client, isAuthenticated, login } = useWix();
-  const [group, setGroup] = useState(mockGroup);
-  const [stories, setStories] = useState(mockStories);
-  const [isLoading, setIsLoading] = useState(false);
+  const [group, setGroup] = useState<Group | null>(null);
+  const [stories, setStories] = useState<Story[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isMember, setIsMember] = useState(false);
 
   useEffect(() => {
@@ -85,23 +69,21 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
           .limit(20)
           .find();
 
-        if (storiesResult.items.length > 0) {
-          setStories(
-            storiesResult.items.map((item: any) => ({
-              _id: item.data._id,
-              title: item.data.title,
-              excerpt: item.data.excerpt,
-              coverImage: item.data.coverImage,
-              author: item.data.author,
-              groupName: item.data.groupName,
-              groupSlug: item.data.groupSlug,
-              createdAt: item.data._createdDate,
-              likesCount: item.data.likesCount || 0,
-              commentsCount: item.data.commentsCount || 0,
-              readTime: item.data.readTime,
-            }))
-          );
-        }
+        setStories(
+          storiesResult.items.map((item: any) => ({
+            _id: item.data._id,
+            title: item.data.title,
+            excerpt: item.data.excerpt,
+            coverImage: item.data.coverImage,
+            author: item.data.author,
+            groupName: item.data.groupName,
+            groupSlug: item.data.groupSlug,
+            createdAt: item.data._createdDate,
+            likesCount: item.data.likesCount || 0,
+            commentsCount: item.data.commentsCount || 0,
+            readTime: item.data.readTime,
+          }))
+        );
       } catch (error) {
         console.error('Error fetching group data:', error);
       } finally {
@@ -118,6 +100,8 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
       return;
     }
 
+    if (!group) return;
+
     try {
       await client?.groups.joinGroup(group._id);
       setIsMember(true);
@@ -125,6 +109,32 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
       console.error('Error joining group:', error);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="h-48 md:h-64 lg:h-80 bg-gray-200 animate-pulse" />
+        <div className="container-app -mt-16 relative z-10">
+          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4" />
+            <div className="h-4 bg-gray-200 rounded w-2/3 mb-2" />
+            <div className="h-4 bg-gray-200 rounded w-1/2" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!group) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Group not found</h2>
+          <p className="text-gray-600">The group you're looking for doesn't exist.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

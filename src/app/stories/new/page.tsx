@@ -10,17 +10,6 @@ interface Group {
   slug: string;
 }
 
-const mockGroups: Group[] = [
-  { _id: '1', name: 'Life Stories', slug: 'life-stories' },
-  { _id: '2', name: 'Tech Tales', slug: 'tech-tales' },
-  { _id: '3', name: 'Travel Adventures', slug: 'travel-adventures' },
-  { _id: '4', name: 'Creative Arts', slug: 'creative-arts' },
-  { _id: '5', name: 'Music & Sound', slug: 'music-sound' },
-  { _id: '6', name: 'Food & Cooking', slug: 'food-cooking' },
-  { _id: '7', name: 'Books & Writing', slug: 'books-writing' },
-  { _id: '8', name: 'Sports & Fitness', slug: 'sports-fitness' },
-];
-
 export default function NewStoryPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -31,8 +20,9 @@ export default function NewStoryPage() {
   const [excerpt, setExcerpt] = useState('');
   const [selectedGroup, setSelectedGroup] = useState(searchParams.get('group') || '');
   const [coverImageUrl, setCoverImageUrl] = useState('');
-  const [groups, setGroups] = useState<Group[]>(mockGroups);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingGroups, setIsLoadingGroups] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -45,19 +35,20 @@ export default function NewStoryPage() {
     async function fetchGroups() {
       if (!client) return;
 
+      setIsLoadingGroups(true);
       try {
         const result = await client.groups.queryGroups().find();
-        if (result.items.length > 0) {
-          setGroups(
-            result.items.map((g: any) => ({
-              _id: g._id,
-              name: g.name,
-              slug: g.slug,
-            }))
-          );
-        }
+        setGroups(
+          result.items.map((g: any) => ({
+            _id: g._id,
+            name: g.name,
+            slug: g.slug,
+          }))
+        );
       } catch (error) {
         console.error('Error fetching groups:', error);
+      } finally {
+        setIsLoadingGroups(false);
       }
     }
 

@@ -21,78 +21,31 @@ interface Comment {
   likesCount?: number;
 }
 
-// Mock data
-const mockStory = {
-  _id: '1',
-  title: 'How I Built My First App and What I Learned Along the Way',
-  content: `
-    <p>It all started on a rainy Sunday afternoon. I was sitting in my small apartment, scrolling through endless tutorials, wondering if I could actually build something meaningful. Little did I know, that day would change everything.</p>
-
-    <h2>The Beginning</h2>
-    <p>I had always been fascinated by technology, but coding seemed like a foreign language. The syntax, the logic, the debugging – it all felt overwhelming. But I had an idea that wouldn't let me go: a simple app to help people track their daily habits.</p>
-
-    <p>Armed with nothing but determination and a free online course, I started learning JavaScript. The first few weeks were brutal. I spent hours staring at error messages, trying to understand why my code wouldn't work.</p>
-
-    <h2>The Breakthrough</h2>
-    <p>After three months of consistent learning, something clicked. I finally understood how to think like a programmer. The logical flow, the problem-solving approach – it all started making sense.</p>
-
-    <p>I remember the exact moment I got my first feature working. It was a simple button that added a new habit to a list. But when I clicked it and saw the habit appear on the screen, I felt like I had just climbed Mount Everest.</p>
-
-    <h2>Lessons Learned</h2>
-    <p>Looking back, here's what I wish someone had told me:</p>
-
-    <ul>
-      <li><strong>Start small.</strong> Don't try to build the next Facebook. Start with something manageable.</li>
-      <li><strong>Embrace the struggle.</strong> Every error message is a learning opportunity.</li>
-      <li><strong>Build in public.</strong> Share your progress. The support you'll receive is invaluable.</li>
-      <li><strong>Ship it.</strong> Done is better than perfect. You can always improve later.</li>
-    </ul>
-
-    <h2>The Launch</h2>
-    <p>Six months after that rainy Sunday, I launched my app. It wasn't perfect – far from it. But people were using it. Real people, solving real problems with something I built.</p>
-
-    <p>That feeling of creating value for others? It's addictive. And it all started with a single step.</p>
-
-    <p>If you're thinking about learning to code, or building something of your own, this is your sign. Start today. The journey is challenging, but the destination is worth every struggle along the way.</p>
-  `,
-  excerpt: 'A journey through the ups and downs of creating something from scratch.',
-  coverImage: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop',
-  author: {
-    _id: 'a1',
-    nickname: 'Alex Chen',
-    photo: '',
-    bio: 'Software developer and lifelong learner. Building cool things one line of code at a time.',
-  },
-  groupName: 'Tech Tales',
-  groupSlug: 'tech-tales',
-  createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-  likesCount: 42,
-  commentsCount: 12,
-  readTime: 5,
-};
-
-const mockComments: Comment[] = [
-  {
-    _id: 'c1',
-    content: 'This is so inspiring! I\'m currently learning to code and this gives me hope. Thank you for sharing your journey.',
-    author: { _id: 'u1', nickname: 'Sarah M.', photo: '' },
-    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    likesCount: 8,
-  },
-  {
-    _id: 'c2',
-    content: 'The "ship it" advice is so true. I spent way too long trying to make my first project perfect and never launched it.',
-    author: { _id: 'u2', nickname: 'Mike T.', photo: '' },
-    createdAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-    likesCount: 5,
-  },
-];
+interface Story {
+  _id: string;
+  title: string;
+  content: string;
+  excerpt?: string;
+  coverImage?: string;
+  author?: {
+    _id: string;
+    nickname?: string;
+    photo?: string;
+    bio?: string;
+  };
+  groupName?: string;
+  groupSlug?: string;
+  createdAt: string;
+  likesCount: number;
+  commentsCount: number;
+  readTime?: number;
+}
 
 export default function StoryDetailPage({ params }: StoryDetailPageProps) {
   const { client, isAuthenticated, member, login } = useWix();
-  const [story, setStory] = useState(mockStory);
-  const [comments, setComments] = useState<Comment[]>(mockComments);
-  const [isLoading, setIsLoading] = useState(false);
+  const [story, setStory] = useState<Story | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -194,6 +147,20 @@ export default function StoryDetailPage({ params }: StoryDetailPageProps) {
             <div className="h-4 bg-gray-200 rounded w-5/6" />
             <div className="h-4 bg-gray-200 rounded w-4/6" />
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!story) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Story not found</h2>
+          <p className="text-gray-600 mb-4">The story you're looking for doesn't exist.</p>
+          <Link href="/" className="btn-primary">
+            Go Home
+          </Link>
         </div>
       </div>
     );
