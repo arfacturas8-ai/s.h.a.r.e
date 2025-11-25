@@ -54,7 +54,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
             _id: groupResult.group._id!,
             name: groupResult.group.name!,
             slug: groupResult.group.slug!,
-            description: groupResult.group.description,
+            description: groupResult.group.description || undefined,
             coverImage: (groupResult.group as any).coverImage?.url,
             memberCount: groupResult.group.membersCount || 0,
             postCount: (groupResult.group as any).postsCount || 0,
