@@ -79,7 +79,7 @@ export default function NewStoryPage() {
 
       // Save story to Wix CMS
       if (client) {
-        await client.items.insert({
+        await client.items.insertDataItem({
           dataCollectionId: 'Stories',
           dataItem: {
             data: {

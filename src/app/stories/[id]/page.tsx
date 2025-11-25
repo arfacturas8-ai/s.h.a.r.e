@@ -65,9 +65,8 @@ export default function StoryDetailPage({ params }: StoryDetailPageProps) {
 
       setIsLoading(true);
       try {
-        const result = await client.items.get({
+        const result = await client.items.getDataItem(params.id, {
           dataCollectionId: 'Stories',
-          dataItemId: params.id,
         });
 
         if (result.dataItem) {
