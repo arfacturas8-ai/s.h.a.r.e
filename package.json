@@ -1,0 +1,36 @@
+{
+  "name": "share-a-cool-story",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@wix/sdk": "^1.12.12",
+    "@wix/data": "^1.0.78",
+    "@wix/members": "^1.0.67",
+    "@wix/groups": "^1.0.39",
+    "@wix/comments": "^1.0.35",
+    "@wix/reactions": "^1.0.4",
+    "@wix/redirects": "^1.0.43",
+    "next": "14.2.8",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "js-cookie": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.8",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5"
+  }
+}
