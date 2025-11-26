@@ -63,7 +63,7 @@ export default function GroupDetailPage({ params }: GroupDetailPageProps) {
 
         // Fetch stories for this group
         const storiesResult = await client.items
-          .queryDataItems({ dataCollectionId: 'Stories' })
+          .query('Stories')
           .eq('groupSlug', params.slug)
           .descending('_createdDate')
           .limit(20)

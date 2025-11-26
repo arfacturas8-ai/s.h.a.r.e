@@ -38,7 +38,7 @@ export default function ProfilePage() {
       setIsLoading(true);
       try {
         const result = await client.items
-          .queryDataItems({ dataCollectionId: 'Stories' })
+          .query('Stories')
           .eq('author._id', member._id)
           .descending('_createdDate')
           .find();

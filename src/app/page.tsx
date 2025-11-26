@@ -67,7 +67,7 @@ export default function HomePage() {
 
         // Fetch stories from Wix CMS
         const storiesResult = await client.items
-          .queryDataItems({ dataCollectionId: 'Stories' })
+          .query('Stories')
           .descending('_createdDate')
           .limit(20)
           .find();

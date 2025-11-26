@@ -79,26 +79,21 @@ export default function NewStoryPage() {
 
       // Save story to Wix CMS
       if (client) {
-        await client.items.insertDataItem({
-          dataCollectionId: 'Stories',
-          dataItem: {
-            data: {
-              title,
-              content: `<div>${content.split('\n').map((p) => `<p>${p}</p>`).join('')}</div>`,
-              excerpt: excerpt || content.substring(0, 200) + '...',
-              coverImage: coverImageUrl || null,
-              groupSlug: selectedGroup,
-              groupName: selectedGroupData?.name,
-              author: {
-                _id: member?._id,
-                nickname: member?.profile?.nickname || 'Anonymous',
-                photo: member?.profile?.photo?.url,
-              },
-              likesCount: 0,
-              commentsCount: 0,
-              readTime: Math.ceil(content.split(/\s+/).length / 200),
-            },
+        await client.items.insert('Stories', {
+          title,
+          content: `<div>${content.split('\n').map((p) => `<p>${p}</p>`).join('')}</div>`,
+          excerpt: excerpt || content.substring(0, 200) + '...',
+          coverImage: coverImageUrl || null,
+          groupSlug: selectedGroup,
+          groupName: selectedGroupData?.name,
+          author: {
+            _id: member?._id,
+            nickname: member?.profile?.nickname || 'Anonymous',
+            photo: member?.profile?.photo?.url,
           },
+          likesCount: 0,
+          commentsCount: 0,
+          readTime: Math.ceil(content.split(/\s+/).length / 200),
         });
       }
 
