@@ -67,7 +67,7 @@ export default function StoryDetailPage({ params }: StoryDetailPageProps) {
       try {
         const result = await client.items.get('Stories', params.id);
 
-        if (result.dataItem) {
+        if (result?.dataItem) {
           setStory({
             _id: result.dataItem.data?._id,
             title: result.dataItem.data?.title,
