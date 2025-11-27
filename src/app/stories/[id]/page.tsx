@@ -1,10 +1,17 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getStoryById, getTopStories } from '@/lib/mock-data';
+import { stories, getStoryById, getTopStories } from '@/lib/mock-data';
 import { StoryCard } from '@/components/stories/StoryCard';
 
 interface StoryDetailPageProps {
   params: { id: string };
+}
+
+// Generate static pages for all stories
+export function generateStaticParams() {
+  return stories.map((story) => ({
+    id: story._id,
+  }));
 }
 
 export default function StoryDetailPage({ params }: StoryDetailPageProps) {

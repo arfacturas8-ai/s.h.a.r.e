@@ -1,10 +1,17 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getGroupBySlug, getStoriesByGroup } from '@/lib/mock-data';
+import { groups, getGroupBySlug, getStoriesByGroup } from '@/lib/mock-data';
 import { StoryCard } from '@/components/stories/StoryCard';
 
 interface GroupDetailPageProps {
   params: { slug: string };
+}
+
+// Generate static pages for all groups
+export function generateStaticParams() {
+  return groups.map((group) => ({
+    slug: group.slug,
+  }));
 }
 
 export default function GroupDetailPage({ params }: GroupDetailPageProps) {

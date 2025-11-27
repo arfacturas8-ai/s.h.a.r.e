@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
-import { WixProvider } from '@/lib/wix-context';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Share A Cool Story',
-  description: 'A community platform where people share their unique and compelling stories with a global audience.',
-  keywords: ['stories', 'community', 'sharing', 'social'],
+  title: 'Share a Cool Story',
+  description: 'A sanctuary for storytellers. Where every voice matters and every story finds its audience.',
+  keywords: ['stories', 'community', 'sharing', 'storytelling', 'writing'],
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
@@ -18,11 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        <WixProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </WixProvider>
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
