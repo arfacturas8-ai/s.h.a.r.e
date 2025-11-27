@@ -1,4 +1,4 @@
-import { createClient, OAuthStrategy, ApiKeyStrategy } from '@wix/sdk';
+import { createClient, OAuthStrategy } from '@wix/sdk';
 import { items } from '@wix/data';
 import { members } from '@wix/members';
 import { groups } from '@wix/groups';
@@ -34,42 +34,33 @@ export async function getWixClient() {
   return client;
 }
 
-// Server client using API Key (for admin operations)
-export function createServerClient() {
-  const apiKey = process.env.WIX_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('WIX_API_KEY is not configured');
-  }
-
-  return createClient({
-    modules: { items, members, groups },
-    auth: ApiKeyStrategy({
-      apiKey,
-      siteId: process.env.WIX_SITE_ID,
-    }),
-  });
-}
 
 // Auth helper functions
 export async function loginWithRedirect(client: ReturnType<typeof createBrowserClient>) {
-  const loginUrl = await client.auth.getLoginUrl({
-    redirectUri: `${window.location.origin}/auth/callback`,
-  });
-  window.location.href = loginUrl;
+  const oauthData = client.auth.generateOAuthData(
+    `${window.location.origin}/auth/callback`
+  );
+  const { authUrl } = await client.auth.getAuthUrl(oauthData);
+  // Store the OAuth data for callback handling
+  sessionStorage.setItem('wix_oauth_data', JSON.stringify(oauthData));
+  window.location.href = authUrl;
 }
 
 export async function logout(client: ReturnType<typeof createBrowserClient>) {
-  const logoutUrl = await client.auth.getLogoutUrl({
-    redirectUri: window.location.origin,
-  });
   Cookies.remove('wix_tokens');
-  window.location.href = logoutUrl;
+  // Clear session and redirect to home
+  window.location.href = '/';
 }
 
 export async function handleAuthCallback(client: ReturnType<typeof createBrowserClient>, code: string, state: string) {
-  const tokens = await client.auth.getMemberTokens(code, state);
+  const oauthDataStr = sessionStorage.getItem('wix_oauth_data');
+  if (!oauthDataStr) {
+    throw new Error('OAuth data not found');
+  }
+  const oauthData = JSON.parse(oauthDataStr);
+  const tokens = await client.auth.getMemberTokens(code, state, oauthData);
   Cookies.set('wix_tokens', JSON.stringify(tokens), { expires: 7 });
+  sessionStorage.removeItem('wix_oauth_data');
   return tokens;
 }
 
